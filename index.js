@@ -36,49 +36,31 @@ app.get("/states", (req, res) => {
   });
 });
 
-// DISTRICTS API
-app.get("/districts/:state_id", (req, res) => {
-  db.query(
-    "SELECT * FROM districts WHERE state_id = ?",
-    [req.params.state_id],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Server error" });
-      }
-      res.json(result);
-    }
-  );
+app.get('/districts', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM districts');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// SUBDISTRICTS API
-app.get("/subdistricts/:district_id", (req, res) => {
-  db.query(
-    "SELECT * FROM subdistricts WHERE district_id = ?",
-    [req.params.district_id],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Server error" });
-      }
-      res.json(result);
-    }
-  );
+app.get('/subdistricts', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM subdistricts');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// VILLAGES API (LIMIT added )
-app.get("/villages/:subdistrict_id", (req, res) => {
-  db.query(
-    "SELECT * FROM villages WHERE subdistrict_id = ? LIMIT 100",
-    [req.params.subdistrict_id],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Server error" });
-      }
-      res.json(result);
-    }
-  );
+app.get('/villages', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM villages');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // SEARCH API (Hierarchical & Secure)
