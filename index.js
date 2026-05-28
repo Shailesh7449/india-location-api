@@ -36,64 +36,49 @@ app.get("/states", (req, res) => {
   });
 });
 
-app.get('/districts', async (req, res) => {
-  try {
-    const { state_id } = req.query;
-
-    let query = 'SELECT * FROM districts';
-    let params = [];
-
-    if (state_id) {
-      query += ' WHERE state_id = ?';
-      params.push(state_id);
+// DISTRICTS API
+app.get("/districts/:state_id", (req, res) => {
+  db.query(
+    "SELECT * FROM districts WHERE state_id = ?",
+    [req.params.state_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Server error" });
+      }
+      res.json(result);
     }
-
-    const [rows] = await db.promise().query(query, params);
-
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  );
 });
 
-app.get('/subdistricts', async (req, res) => {
-  try {
-    const { district_id } = req.query;
-
-    let query = 'SELECT * FROM subdistricts';
-    let params = [];
-
-    if (district_id) {
-      query += ' WHERE district_id = ?';
-      params.push(district_id);
+// SUBDISTRICTS API
+app.get("/subdistricts/:district_id", (req, res) => {
+  db.query(
+    "SELECT * FROM subdistricts WHERE district_id = ?",
+    [req.params.district_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Server error" });
+      }
+      res.json(result);
     }
-
-    const [rows] = await db.promise().query(query, params);
-
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  );
 });
 
-app.get('/villages', async (req, res) => {
-  try {
-    const { subdistrict_id } = req.query;
-
-    let query = 'SELECT * FROM villages';
-    let params = [];
-
-    if (subdistrict_id) {
-      query += ' WHERE subdistrict_id = ?';
-      params.push(subdistrict_id);
+// VILLAGES API (LIMIT added )
+app.get("/villages/:subdistrict_id", (req, res) => {
+  db.query(
+    "SELECT * FROM villages WHERE subdistrict_id = ? LIMIT 100",
+    [req.params.subdistrict_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Server error" });
+      }
+      res.json(result);
     }
-
-    const [rows] = await db.promise().query(query, params);
-
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  );
 });
 
 // SEARCH API (Hierarchical & Secure)
