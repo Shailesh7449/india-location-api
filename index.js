@@ -38,7 +38,18 @@ app.get("/states", (req, res) => {
 
 app.get('/districts', async (req, res) => {
   try {
-    const [rows] = await db.promise().query('SELECT * FROM districts');
+    const { state_id } = req.query;
+
+    let query = 'SELECT * FROM districts';
+    let params = [];
+
+    if (state_id) {
+      query += ' WHERE state_id = ?';
+      params.push(state_id);
+    }
+
+    const [rows] = await db.promise().query(query, params);
+
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -47,7 +58,18 @@ app.get('/districts', async (req, res) => {
 
 app.get('/subdistricts', async (req, res) => {
   try {
-    const [rows] = await db.promise().query('SELECT * FROM subdistricts');
+    const { district_id } = req.query;
+
+    let query = 'SELECT * FROM subdistricts';
+    let params = [];
+
+    if (district_id) {
+      query += ' WHERE district_id = ?';
+      params.push(district_id);
+    }
+
+    const [rows] = await db.promise().query(query, params);
+
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,7 +78,18 @@ app.get('/subdistricts', async (req, res) => {
 
 app.get('/villages', async (req, res) => {
   try {
-    const [rows] = await db.promise().query('SELECT * FROM villages');
+    const { subdistrict_id } = req.query;
+
+    let query = 'SELECT * FROM villages';
+    let params = [];
+
+    if (subdistrict_id) {
+      query += ' WHERE subdistrict_id = ?';
+      params.push(subdistrict_id);
+    }
+
+    const [rows] = await db.promise().query(query, params);
+
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
