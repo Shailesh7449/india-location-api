@@ -38,7 +38,7 @@ app.get("/states", (req, res) => {
 
 app.get('/districts', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM districts');
+    const [rows] = await db.promise().query('SELECT * FROM districts');
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -47,7 +47,7 @@ app.get('/districts', async (req, res) => {
 
 app.get('/subdistricts', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM subdistricts');
+    const [rows] = await db.promise().query('SELECT * FROM subdistricts');
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,7 +56,7 @@ app.get('/subdistricts', async (req, res) => {
 
 app.get('/villages', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM villages');
+    const [rows] = await db.promise().query('SELECT * FROM villages');
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
